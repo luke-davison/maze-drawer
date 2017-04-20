@@ -6,8 +6,8 @@ var line_pos = 1;
 var my_canvas = document.getElementById("canvas");
 
 
-var mazePositionX = 50;
-var mazePositionY = 50;
+var mazePositionX = 48;
+var mazePositionY = 48;
 
 
 var mazeWidth = 100;
@@ -15,7 +15,7 @@ var mazeHeight = 100;
 var mazeArray = [];
 var startX = 20;
 var startY = 0;
-var entranceExitValue = 30;
+var entranceExitValue = 6;
 var initialLine = entranceExitValue;
 var endLine = 0;
 var endX = mazeWidth - startX;
