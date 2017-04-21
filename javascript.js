@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', start);
 
 var timer = setInterval(drawStart,200);
 var timerCounter = 0;
-var line_pos = 1;
 var my_canvas = document.getElementById("canvas");
+var context = my_canvas.getContext("2d");
 
 
 var mazePositionX = 48;
@@ -34,7 +34,16 @@ function randomBranchLength() {
   return Math.floor((Math.random() * 15) + 3);
 }
 
+function setStartingValues() {
+  mazeArray = [];
+  treeArray = [];
+  branchArray = [];
+  doneYet = false;
+  initialLine = entranceExitValue;
+}
+
 function start() {
+  setStartingValues();
   for (var i = 0; i < mazeWidth; i++) {
     mazeArray.push([]);
     for (var j = 0; j < mazeHeight; j++) {
@@ -62,35 +71,38 @@ function drawMore() {
     endLine --;
   }
 
-    if (timerCounter === 0) {
-    for (var i = 0; i < treeArray.length; i++) {
-      if (treeArray[i].moving) {
-        if (checkEmpty(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction) && (treeArray[i].counter != 0)) {
-          drawBranch(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction);
-          treeArray[i].xPos += xOffset(treeArray[i].direction);
-          treeArray[i].yPos += yOffset(treeArray[i].direction);
-          mazeArray[treeArray[i].xPos][treeArray[i].yPos] = true;
-          treeArray[i].counter --;
-        }
-        else {
-          treeArray[i].moving = false;
-        }
-      }
-    }
-    for (i = 0; i < branchArray.length; i++) {
-      if (branchArray[i].counter === 0) {
-        branchOff(branchArray[i]);
-        branchArray[i].counter = randomBranchValue();
+  for (var i = 0; i < treeArray.length; i++) {
+    if (treeArray[i].moving) {
+      if (checkEmpty(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction) && (treeArray[i].counter != 0)) {
+        drawBranch(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction);
+        treeArray[i].xPos += xOffset(treeArray[i].direction);
+        treeArray[i].yPos += yOffset(treeArray[i].direction);
+        mazeArray[treeArray[i].xPos][treeArray[i].yPos] = true;
+        treeArray[i].counter --;
       }
       else {
-        branchArray[i].counter --;
+        treeArray[i].moving = false;
       }
     }
   }
+  if (branchArray.length === 0) {
+    clearInterval(timer);
+    timer = setInterval(wipeAndStartAgain,5000);
+  }
   else {
-    for (var i = 0; i < treeArray.length; i++) {
-      if (treeArray[i].moving) {
-        drawBranch(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction);
+    for (i = 0; i < branchArray.length; i++) {
+      if (branchArray[i].counter === 0) {
+        branchOff(branchArray[i]);
+        if (treeArray[branchArray[i].fromID].moving === false) {
+          branchArray.splice(i,1);
+          i --;
+        }
+        else {
+          branchArray[i].counter = randomBranchValue();
+        }
+      }
+      else {
+        branchArray[i].counter --;
       }
     }
   }
@@ -152,7 +164,6 @@ function drawBranch(fromX,fromY,thisWay) {
   fromY = fromY * corridorWidth + mazePositionY;
   toX = fromX + xOffset(thisWay) * corridorWidth;
   toY = fromY + yOffset(thisWay) * corridorWidth ;
-  var context = my_canvas.getContext("2d");
   context.beginPath();
   context.moveTo(fromX,fromY);
   context.lineTo(toX,toY);
@@ -161,4 +172,12 @@ function drawBranch(fromX,fromY,thisWay) {
   if ((toX === endX * corridorWidth + mazePositionX)&&(toY === endY * corridorWidth + mazePositionY)) {
     endLine = entranceExitValue;
   }
+}
+
+function wipeAndStartAgain() {
+  setStartingValues();
+  start();
+  clearInterval(timer);
+  timer = setInterval(drawStart,200);
+  context.clearRect(0,0, my_canvas.width, my_canvas.height);
 }
