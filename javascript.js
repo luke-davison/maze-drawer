@@ -1,27 +1,26 @@
 document.addEventListener('DOMContentLoaded', start);
 
 var timer = setInterval(drawStart,200);
-var timerCounter = 0;
 var my_canvas = document.getElementById("canvas");
 var context = my_canvas.getContext("2d");
 
 
-var mazePositionX = 48;
-var mazePositionY = 48;
+var mazePositionX;
+var mazePositionY;
 
 
-var mazeWidth = 100;
-var mazeHeight = 100;
+var mazeWidth;
+var mazeHeight;
 var mazeArray = [];
-var startX = 20;
-var startY = 0;
-var entranceExitValue = 6;
-var initialLine = entranceExitValue;
+var startX;
+var startY;
+var entranceExitValue;
+var initialLine;
 var endLine = 0;
-var endX = mazeWidth - startX;
-var endY = mazeHeight - 1;
+var endX;
+var endY;
 
-var corridorWidth = 8;
+var corridorWidth;
 
 var treeArray = [];
 var branchArray = [];
@@ -35,11 +34,23 @@ function randomBranchLength() {
 }
 
 function setStartingValues() {
+  corridorWidth = 8;
+
   mazeArray = [];
   treeArray = [];
   branchArray = [];
-  doneYet = false;
+  entranceExitValue = 6;
   initialLine = entranceExitValue;
+  my_canvas.width = window.innerWidth - 10;
+  my_canvas.height = window.innerHeight - 10;
+  mazeWidth = Math.floor(my_canvas.width / corridorWidth - (entranceExitValue * 2));
+  mazeHeight = Math.floor(my_canvas.height / corridorWidth - (entranceExitValue * 2));
+  startX = Math.floor(mazeWidth * 0.25);
+  startY = 0;
+  endX = mazeWidth - startX;
+  endY = mazeHeight - 1;
+  mazePositionX = entranceExitValue * corridorWidth;
+  mazePositionY = entranceExitValue * corridorWidth;
 }
 
 function start() {
