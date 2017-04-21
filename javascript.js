@@ -27,11 +27,11 @@ var treeArray = [];
 var branchArray = [];
 
 function randomBranchValue() {
-  return Math.floor((Math.random() * 5) + 1);
+  return Math.floor((Math.random() * 15) + 1);
 }
 
 function randomBranchLength() {
-  return Math.floor((Math.random() * 10) + 3);
+  return Math.floor((Math.random() * 15) + 3);
 }
 
 function start() {
