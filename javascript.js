@@ -4,10 +4,8 @@ var timer = setInterval(drawStart,200);
 var my_canvas = document.getElementById("canvas");
 var context = my_canvas.getContext("2d");
 
-
 var mazePositionX;
 var mazePositionY;
-
 
 var mazeWidth;
 var mazeHeight;
@@ -21,6 +19,7 @@ var endX;
 var endY;
 
 var corridorWidth;
+var lineWidth;
 
 var treeArray = [];
 var branchArray = [];
@@ -34,7 +33,8 @@ function randomBranchLength() {
 }
 
 function setStartingValues() {
-  corridorWidth = 8;
+  corridorWidth = 10;
+  lineWidth = 6
 
   mazeArray = [];
   treeArray = [];
@@ -175,7 +175,22 @@ function drawBranch(fromX,fromY,thisWay) {
   fromY = fromY * corridorWidth + mazePositionY;
   toX = fromX + xOffset(thisWay) * corridorWidth;
   toY = fromY + yOffset(thisWay) * corridorWidth ;
+
+  if (fromX > toX) {
+    toX -= lineWidth / 2
+  } else if (fromX < toX) {
+    toX += lineWidth / 2
+  }
+
+  if (fromY > toY) {
+    toY -= lineWidth / 2
+  } else if (fromY < toY) {
+    toY += lineWidth / 2
+  }
+
   context.beginPath();
+  context.lineWidth = lineWidth;
+  context.strokeStyle = "white";
   context.moveTo(fromX,fromY);
   context.lineTo(toX,toY);
   context.stroke();
