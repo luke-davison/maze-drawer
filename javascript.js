@@ -84,12 +84,17 @@ function drawMore() {
 
   for (var i = 0; i < treeArray.length; i++) {
     if (treeArray[i].moving) {
-      if (checkEmpty(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction) && (treeArray[i].counter != 0)) {
-        drawBranch(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction);
-        treeArray[i].xPos += xOffset(treeArray[i].direction);
-        treeArray[i].yPos += yOffset(treeArray[i].direction);
-        mazeArray[treeArray[i].xPos][treeArray[i].yPos] = true;
-        treeArray[i].counter --;
+      if (checkEmpty(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction)) {
+        const left = treeArray[i].direction - 1 >= 0 ? treeArray[i].direction - 1 : 3
+        const right = treeArray[i].direction + 1 < 4 ? treeArray[i].direction + 1 : 0
+        if (treeArray[i].counter > 0
+        || (!checkEmpty(treeArray[i].xPos, treeArray[i].yPos, left) && !checkEmpty(treeArray[i].xPos, treeArray[i].yPos, right))) {
+          drawBranch(treeArray[i].xPos, treeArray[i].yPos, treeArray[i].direction);
+          treeArray[i].xPos += xOffset(treeArray[i].direction);
+          treeArray[i].yPos += yOffset(treeArray[i].direction);
+          mazeArray[treeArray[i].xPos][treeArray[i].yPos] = true;
+          treeArray[i].counter --;
+        }
       }
       else {
         treeArray[i].moving = false;
